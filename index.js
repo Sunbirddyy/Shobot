@@ -4,7 +4,6 @@ const path = require('path');
 const config = require('./config.json');
 require('dotenv').config();
 
-// Create a new client instance
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -15,10 +14,8 @@ const client = new Client({
     ]
 });
 
-// Create a collection to store commands
 client.commands = new Collection();
 
-// Load commands
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
@@ -32,7 +29,6 @@ for (const file of commandFiles) {
     }
 }
 
-// Load events
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
@@ -46,7 +42,6 @@ for (const file of eventFiles) {
     }
 }
 
-// Activity tracking for currency earning
 const activeUsers = new Map();
 
 client.on('messageCreate', async (message) => {
@@ -88,5 +83,4 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
     }
 });
 
-// Login to Discord with your client's token
 client.login(process.env.DISCORD_TOKEN || config.token);
