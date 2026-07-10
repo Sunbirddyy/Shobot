@@ -50,7 +50,6 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async execute(interaction) {
-        // Check if user has admin permissions
         if (!interaction.member.permissions.has(PermissionFlagsBits.Administrator)) {
             await interaction.reply({
                 content: '❌ You need Administrator permissions to use this command!',
@@ -68,7 +67,6 @@ module.exports = {
         const emoji = interaction.options.getString('emoji') || '🎁';
         const role = interaction.options.getRole('role');
 
-        // Validate inputs
         if (price < 1) {
             await interaction.reply({
                 content: '❌ Price must be at least 1 coin!',
@@ -85,7 +83,6 @@ module.exports = {
             return;
         }
 
-        // Validate role requirement for role types
         if (type.startsWith('role_') && !role) {
             await interaction.reply({
                 content: '❌ You must select a Discord role when adding a role type item!',
@@ -95,10 +92,8 @@ module.exports = {
         }
 
         try {
-            // Get current shop data
             const shopData = database.getShopData();
 
-            // Check if item ID already exists
             if (shopData.items.find(item => item.id === id)) {
                 await interaction.reply({
                     content: `❌ An item with ID '${id}' already exists!`,
@@ -107,7 +102,7 @@ module.exports = {
                 return;
             }
 
-            // Create new item
+
             const newItem = {
                 id: id,
                 name: name,
@@ -118,7 +113,6 @@ module.exports = {
                 emoji: emoji
             };
 
-            // If it's a role type, add it to the roles data instead of shop
             if (type.startsWith('role_')) {
                 const category = type.replace('role_', '');
                 const rolesData = database.getRolesData();
@@ -140,7 +134,6 @@ module.exports = {
 
                 rolesData.categories[category].roles.push(roleItem);
                 
-                // Save roles data
                 const rolesPath = require('path').join(__dirname, '../data/roles.json');
                 fs.writeFileSync(rolesPath, JSON.stringify(rolesData, null, 2));
 
@@ -162,14 +155,9 @@ module.exports = {
                 return;
             }
 
-            // Add regular item to shop
             shopData.items.push(newItem);
-
-            // Save updated shop data
             const shopPath = require('path').join(__dirname, '../data/shop.json');
             fs.writeFileSync(shopPath, JSON.stringify(shopData, null, 2));
-
-            // Create success embed
             const successEmbed = new EmbedBuilder()
                 .setTitle('✅ Item Added Successfully!')
                 .setColor('#00ff00')
