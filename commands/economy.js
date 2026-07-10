@@ -224,8 +224,6 @@ module.exports = {
             }
 
             userData.currency -= item.price;
-
-            // Handle different item types safely
             switch (item.type) {
                 case 'spins':
                     if (typeof userData.spins !== 'number') userData.spins = 0;
